@@ -10,6 +10,8 @@ const MeetingsPage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingTime, setMeetingTime] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (instructorId) {
@@ -23,6 +25,7 @@ const MeetingsPage = () => {
       setMeetings(res.data);
     } catch (error) {
       console.error("Error fetching meetings:", error);
+      setError("Failed to fetch meetings. Please try again.");
     }
   };
 
@@ -32,17 +35,26 @@ const MeetingsPage = () => {
       return;
     }
 
+    setIsLoading(true);
+    setError("");
+
     try {
+      const formattedMeetingTime = new Date(meetingTime).toISOString(); // Ensure consistent format
       await axios.post("https://backend-dup.onrender.com/api/meetings/create", {
         instructorId,
         meetingTitle,
-        meetingTime,
+        meetingTime: formattedMeetingTime,
       });
 
       setShowPopup(false);
+      setMeetingTitle("");
+      setMeetingTime("");
       fetchMeetings();
     } catch (error) {
       console.error("Error creating meeting:", error);
+      setError("Failed to create meeting. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,6 +64,7 @@ const MeetingsPage = () => {
       fetchMeetings();
     } catch (error) {
       console.error("Error marking meeting as completed:", error);
+      setError("Failed to mark meeting as completed.");
     }
   };
 
@@ -61,6 +74,7 @@ const MeetingsPage = () => {
       fetchMeetings();
     } catch (error) {
       console.error("Error marking meeting as undone:", error);
+      setError("Failed to mark meeting as undone.");
     }
   };
 
@@ -80,7 +94,12 @@ const MeetingsPage = () => {
     <div className="p-4 bg-gray-900 min-h-screen text-white mt-4">
       <h2 className="text-2xl font-bold mb-4">Instructor Dashboard</h2>
 
-      <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4" onClick={() => setShowPopup(true)}>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+        onClick={() => setShowPopup(true)}
+      >
         Schedule Meeting
       </button>
 
@@ -105,11 +124,17 @@ const MeetingsPage = () => {
               </button>
 
               {!meeting.isCompleted ? (
-                <button className="bg-green-500 text-white px-4 py-2 rounded ml-4" onClick={() => markAsCompleted(meeting._id)}>
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded ml-4"
+                  onClick={() => markAsCompleted(meeting._id)}
+                >
                   Mark as Completed
                 </button>
               ) : (
-                <button className="bg-red-500 text-white px-4 py-2 rounded ml-4" onClick={() => markAsUndone(meeting._id)}>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded ml-4"
+                  onClick={() => markAsUndone(meeting._id)}
+                >
                   Mark as Undone
                 </button>
               )}
@@ -139,11 +164,18 @@ const MeetingsPage = () => {
             />
             
             <div className="flex justify-end space-x-2">
-              <button className="bg-gray-500 text-white px-4 py-2 rounded" onClick={() => setShowPopup(false)}>
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+                onClick={() => setShowPopup(false)}
+              >
                 Cancel
               </button>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleCreateMeeting}>
-                Create
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={handleCreateMeeting}
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating..." : "Create"}
               </button>
             </div>
           </div>

@@ -9,7 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  // Get user data safely
+  // Safely get user data from localStorage
   const user = (() => {
     try {
       return JSON.parse(localStorage.getItem("user")) || null;
@@ -48,6 +48,7 @@ const Navbar = () => {
   return (
     <nav className="bg-white dark:bg-gray-800 fixed w-full top-0 left-0 z-10 p-4 px-6 md:px-36 shadow-md">
       <div className="flex items-center justify-between max-w-7xl">
+        {/* Logo */}
         <div
           onClick={() => navigate("/")}
           className="text-2xl font-bold text-blue-600 dark:text-blue-400 cursor-pointer"
@@ -55,6 +56,7 @@ const Navbar = () => {
           CodeTech
         </div>
 
+        {/* Mobile Menu Toggle Button */}
         <div className="sm:hidden flex items-center">
           <button onClick={toggleMenu} aria-label="Toggle menu">
             {isMenuOpen ? (
@@ -65,9 +67,12 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Desktop Menu */}
         <div className="hidden sm:flex items-center space-x-4">
+          {/* Notification Bell */}
           {user && <NotificationBell userId={user._id} />}
 
+          {/* User Dropdown */}
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <button
@@ -92,6 +97,7 @@ const Navbar = () => {
                 </svg>
               </button>
 
+              {/* Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="absolute right-0 w-48 mt-2 bg-white dark:bg-gray-700 text-black dark:text-white shadow-lg rounded-md">
                   {user?.role === "admin" ? (
@@ -128,6 +134,7 @@ const Navbar = () => {
             </div>
           ) : (
             <>
+              {/* Login and Register Buttons */}
               <button
                 onClick={() => navigate("/login")}
                 className="px-4 py-2 border rounded-md text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400 bg-transparent hover:bg-blue-100 dark:hover:bg-blue-800"
@@ -142,6 +149,8 @@ const Navbar = () => {
               </button>
             </>
           )}
+
+          {/* Dark Mode Toggle */}
           <DarkModeToggle />
         </div>
       </div>
@@ -160,6 +169,14 @@ const Navbar = () => {
           &times;
         </button>
         <div className="mt-16 space-y-4 px-4">
+          {/* Notification Bell in Mobile Menu */}
+          {user && (
+            <div className="mb-4">
+              <NotificationBell userId={user._id} />
+            </div>
+          )}
+
+          {/* Mobile Menu Options */}
           {user ? (
             user?.role === "admin" ? (
               <button
@@ -206,6 +223,8 @@ const Navbar = () => {
               </button>
             </>
           )}
+
+          {/* Dark Mode Toggle in Mobile Menu */}
           <div className="mt-4">
             <DarkModeToggle />
           </div>

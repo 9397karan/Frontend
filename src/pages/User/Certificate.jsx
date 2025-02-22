@@ -32,7 +32,10 @@ const Certificate = () => {
 
     const handleDownloadPDF = () => {
         if (certificateRef.current) {
-            html2canvas(certificateRef.current, { scale: 2 }).then((canvas) => {
+            const certificateElement = certificateRef.current;
+            const scale = window.innerWidth < 768 ? 1.5 : 2; // Adjust scale for mobile
+
+            html2canvas(certificateElement, { scale: scale }).then((canvas) => {
                 const imgData = canvas.toDataURL("image/png");
                 const pdf = new jsPDF("landscape", "mm", "a4");
                 const imgWidth = 297;
@@ -44,10 +47,10 @@ const Certificate = () => {
     };
 
     return (
-        <div className="flex flex-col items-center  dark:bg-gray-900  justify-center bg-gray-200 p-6 min-h-screen md:h-[900px]">
+        <div className="flex flex-col items-center dark:bg-gray-900 justify-center bg-gray-200 p-6 min-h-screen">
             <div 
                 ref={certificateRef} 
-                className="relative bg-white shadow-2xl text-center w-full max-w-4xl md:w-[70%] md:h-[70%] lg:max-w-6xl border-[10px] border-black p-6 md:p-12 flex flex-col items-center justify-center"
+                className="relative bg-white shadow-2xl text-center w-full max-w-4xl md:w-[70%] lg:max-w-6xl border-[10px] border-black p-6 md:p-12 flex flex-col items-center justify-center"
                 id="certificate"
             >
                 <div className="absolute inset-[10px] md:inset-[20px] border-[5px] md:border-[10px] border-blue-600"></div>

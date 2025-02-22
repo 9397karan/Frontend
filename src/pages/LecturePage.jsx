@@ -26,6 +26,8 @@ const LecturePage = () => {
   const [userScore, setUserScore] = useState(null);
   const [passingScore, setPassingScore] = useState(null);
   const [replies, setReplies] = useState([]);
+  const [isCourseCompleted, setIsCourseCompleted] = useState(false); // New state for course completion
+  const [isMarkingCompleted, setIsMarkingCompleted] = useState(false); // Loading state for the button
 
   // Get user details from localStorage
   const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
@@ -80,6 +82,23 @@ const LecturePage = () => {
     }
   }, [courseId, userId]);
 
+  useEffect(() => {
+    const checkIfCourseCompleted = async () => {
+      try {
+        const res = await axios.get(`https://backend-dup.onrender.com/user/courseCompleted/${userId}`);
+        if (res.data.completedCourses.some(course => course._id === courseId)) {
+          setIsCourseCompleted(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (userId) {
+      checkIfCourseCompleted();
+    }
+  }, [courseId, userId]);
+
   const handleLectureClick = (lesson) => {
     setSelectedLecture(lesson);
   };
@@ -106,6 +125,25 @@ const LecturePage = () => {
     } catch (error) {
       console.error("Failed to send request:", error);
       alert("Failed to send call request.");
+    }
+  };
+
+  const handleMarkAsCompleted = async () => {
+    setIsMarkingCompleted(true);
+    try {
+      const response = await axios.post("https://backend-dup.onrender.com/user/complete-course", {
+        userId,
+        courseId,
+      });
+      if (response.status === 200) {
+        setIsCourseCompleted(true);
+        alert("Course marked as completed successfully!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Failed to mark course as completed.");
+    } finally {
+      setIsMarkingCompleted(false);
     }
   };
 
@@ -179,17 +217,17 @@ const LecturePage = () => {
                   ))
                 )}
 
-               {storedPassed !== "true" && (
-  <Link
-    to={`/course/${courseId}/quiztest`}
-    className="flex items-center gap-3 p-3 text-white bg-orange-500 rounded-lg shadow-md transition-all duration-300 hover:bg-orange-600 hover:shadow-lg"
-  >
-    <span>
-      <MdAssignment size={20} className="text-white" />
-    </span>
-    Attempt Quiz
-  </Link>
-)}
+                {storedPassed !== "true" && (
+                  <Link
+                    to={`/course/${courseId}/quiztest`}
+                    className="flex items-center gap-3 p-3 text-white bg-orange-500 rounded-lg shadow-md transition-all duration-300 hover:bg-orange-600 hover:shadow-lg"
+                  >
+                    <span>
+                      <MdAssignment size={20} className="text-white" />
+                    </span>
+                    Attempt Quiz
+                  </Link>
+                )}
 
                 {storedPassed === "true" && (
                   <Link to={`/certificate/${userId}/${courseId}`} className="flex items-center gap-3 p-3 text-white bg-green-500 rounded-lg shadow-md transition-all duration-300 hover:bg-green-600 hover:shadow-lg">
@@ -205,6 +243,19 @@ const LecturePage = () => {
                 >
                   <IoCall size={20} className="text-white" />
                   Request a Call
+                </button>
+
+                {/* Mark as Completed Button */}
+                <button
+                  onClick={handleMarkAsCompleted}
+                  disabled={isCourseCompleted || isMarkingCompleted}
+                  className={`flex items-center justify-center w-full p-3 text-white rounded-lg shadow-md transition-all duration-300 ${
+                    isCourseCompleted || isMarkingCompleted
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-purple-500 hover:bg-purple-600"
+                  }`}
+                >
+                  {isMarkingCompleted ? "Marking..." : isCourseCompleted ? "Course Completed" : "Mark as Completed"}
                 </button>
               </CardContent>
             </Card>

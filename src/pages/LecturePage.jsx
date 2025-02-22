@@ -179,10 +179,17 @@ const LecturePage = () => {
                   ))
                 )}
 
-                <Link to={`/course/${courseId}/quiztest`} className="flex items-center gap-3 p-3 text-white bg-orange-500 rounded-lg shadow-md transition-all duration-300 hover:bg-orange-600 hover:shadow-lg">
-                  <MdAssignment size={20} className="text-white" />
-                  Attempt Quiz
-                </Link>
+               {storedPassed !== "true" && (
+  <Link
+    to={`/course/${courseId}/quiztest`}
+    className="flex items-center gap-3 p-3 text-white bg-orange-500 rounded-lg shadow-md transition-all duration-300 hover:bg-orange-600 hover:shadow-lg"
+  >
+    <span>
+      <MdAssignment size={20} className="text-white" />
+    </span>
+    Attempt Quiz
+  </Link>
+)}
 
                 {storedPassed === "true" && (
                   <Link to={`/certificate/${userId}/${courseId}`} className="flex items-center gap-3 p-3 text-white bg-green-500 rounded-lg shadow-md transition-all duration-300 hover:bg-green-600 hover:shadow-lg">

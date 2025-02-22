@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { MdDarkMode } from "react-icons/md";
 import { CiLight } from "react-icons/ci";
+
 const DarkModeToggle = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  // Set darkMode to true by default
+  const [darkMode, setDarkMode] = useState(true);
 
   // Load saved dark mode preference from localStorage
   useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedMode);
-    if (savedMode) {
-      document.documentElement.classList.add("dark");
+    const savedMode = localStorage.getItem("darkMode");
+    if (savedMode !== null) {
+      const isDarkMode = savedMode === "true";
+      setDarkMode(isDarkMode);
+      document.documentElement.classList.toggle("dark", isDarkMode);
     } else {
-      document.documentElement.classList.remove("dark");
+      // If no preference is saved, default to dark mode
+      document.documentElement.classList.add("dark");
     }
   }, []);
 
@@ -29,9 +33,13 @@ const DarkModeToggle = () => {
       title="Toggle Dark Mode"
     >
       {darkMode ? (
-        <span className="text-gray-800 dark:text-white "><CiLight size={30}/> </span> // Light Mode
+        <span className="text-gray-800 dark:text-white">
+          <CiLight size={30} /> {/* Light Mode Icon */}
+        </span>
       ) : (
-        <span className="text-gray-800 dark:text-white"> <MdDarkMode size={30}/> </span> // Dark Mode
+        <span className="text-gray-800 dark:text-white">
+          <MdDarkMode size={30} /> {/* Dark Mode Icon */}
+        </span>
       )}
     </button>
   );

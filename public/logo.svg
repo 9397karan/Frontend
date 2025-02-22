@@ -1,0 +1,24 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 100 100"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class="w-24 h-24 md:w-32 md:h-32 text-white"
+>
+  <!-- Circle Background -->
+  <circle cx="50" cy="50" r="45" fill="url(#gradient)" />
+  <!-- Book Icon -->
+  <path d="M30 20V80C30 80 35 75 50 75C65 75 70 80 70 80V20C70 20 65 25 50 25C35 25 30 20 30 20Z" fill="white" />
+  <path d="M30 20V80C30 80 35 75 50 75C65 75 70 80 70 80V20C70 20 65 25 50 25C35 25 30 20 30 20Z" stroke="white" />
+  <line x1="30" y1="50" x2="70" y2="50" stroke="white" />
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3B82F6" /> <!-- Blue -->
+      <stop offset="100%" stop-color="#8B5CF6" /> <!-- Purple -->
+    </linearGradient>
+  </defs>
+</svg>

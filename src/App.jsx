@@ -1,17 +1,15 @@
-import CourseDetails from './pages/CourseDetails'
-import CourseExplore from './pages/CourseExplore'
-import Home from './pages/Home.jsx'
-import React from 'react';
-import MainLayout from './component/MainLayout'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Dashboard from './pages/instructor/Dashboard'
+import CourseDetails from './pages/CourseDetails';
+import CourseExplore from './pages/CourseExplore';
+import Home from './pages/Home.jsx';
+import React, { useState } from 'react';
+import MainLayout from './component/MainLayout';
+import { createBrowserRouter, Navigate, RouterProvider,useLocation } from "react-router-dom";
+import Dashboard from './pages/instructor/Dashboard';
 import Sidebar from './pages/instructor/Sidebar';
 import CourseTable from './pages/instructor/CourseTable';
 import AddCourse from './pages/instructor/AddCourse';
 import AddLesson from './pages/instructor/AddLesson';
 import LecturePage from './pages/LecturePage';
-import { Provider } from "react-redux";
-import RoleSelection from './pages/RoleSelection';
 import UserDashboard from './pages/User/UserDashboard';
 import UserSidebar from './pages/User/UserSidebar';
 import MyLearning from './pages/User/MyLearning';
@@ -25,19 +23,33 @@ import { AdminDashboard } from './pages/admin/AdminDashboard';
 import QuestionForm from './pages/instructor/QuestionForm';
 import Quiz from './pages/Quiz';
 import Certificate from './pages/User/Certificate';
+import { Room } from './pages/instructor/Room';
+import MeetingsPage from './pages/instructor/MeetingsPage';
+import { ToastContainer } from 'react-toastify';
 import SplashScreen from './SplashScreen';
-import { useState } from 'react';
+
+
+export const AdminProtectedRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const location = useLocation();
+
+  if (user && user?.role === "admin") {
+    return children;
+  } else {
+    localStorage.removeItem("user");
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+};
+
 
 const appRouter = createBrowserRouter([
   {
-
     path: "/",
     element: <MainLayout />,
     children: [
       {
         path: "/",
-        element: <Home />
-
+        element: <Home />,
       },
       {
         path: "login",
@@ -48,47 +60,37 @@ const appRouter = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "role-selection",
-        element: <RoleSelection />
-      },
-      {
         path: "course/:courseId/quiztest",
-        element: <Quiz/>
+        element: <Quiz />,
       },
       {
         path: "courseexplore",
-        element: <CourseExplore />
+        element: <CourseExplore />,
       },
       {
         path: "certificate/:userId/:courseId",
-        element: <Certificate/>
+        element: <Certificate />,
       },
       {
         path: "course-detail/:courseId",
-        element: (
-
-          <CourseDetails />
-
-        ),
+        element: <CourseDetails />,
       },
       {
         path: "course-progress/:courseId",
-        element: (
-          <LecturePage />
-        )
+        element: <LecturePage />,
       },
-      // admin routes start from here
+      // Instructor Routes
       {
         path: "instructor",
-        element:
-
-          <Sidebar />
-
-        ,
+        element: <Sidebar />,
         children: [
           {
             path: "dashboard",
             element: <Dashboard />,
+          },
+          {
+            path: "course/meeting",
+            element: <MeetingsPage />,
           },
           {
             path: "course",
@@ -98,22 +100,18 @@ const appRouter = createBrowserRouter([
             path: "course/create",
             element: <AddCourse />,
           },
-
           {
             path: "course/:courseId/add_lessons",
             element: <AddLesson />,
           },
-           //questions
-           {
+          {
             path: "course/:courseId/addquestions",
-            element: <QuestionForm />
+            element: <QuestionForm />,
           },
           {
             path: "course/edit/:id",
-            element: <AddCourse />
+            element: <AddCourse />,
           },
-
-
         ],
       },
       // User Routes
@@ -129,37 +127,40 @@ const appRouter = createBrowserRouter([
             path: "my-learning",
             element: <MyLearning />,
           },
-          
         ],
       },
-
-      //Admin Route
+      // Admin Routes
       {
-        path:"admin",
-        element:<Sidebar2/>,
-        children:[
+        path: "admin",
+        element:(<AdminProtectedRoute> <Sidebar2 /> </AdminProtectedRoute>),
+        children: [
           {
-            path:"dashboard",
-            element:<AdminDashboard/>
+            path: "dashboard",
+            element: <AdminDashboard />,
           },
           {
-            path:"instructor",
-            element:<Instructor/>
+            path: "instructor",
+            element: <Instructor />,
           },
           {
-            path:"allusers",
-            element:<AllUser/>
+            path: "allusers",
+            element: <AllUser />,
           },
           {
-            path:"instructor/:id/course",
-            element:<InstructorInfo/>
-          }
-        ]
-      }
-    ]
+            path: "instructor/:id/course",
+            element: <InstructorInfo />,
+          },
+        ],
+      },
+    ],
   },
-  // Auth routes
-])
+  // Meeting Route (Outside MainLayout to remove nav)
+  {
+    path: "meeting/:roomID",
+    element: <Room />,
+  },
+]);
+
 function App() {
   const [loading, setLoading] = useState(true);
   return (
@@ -173,4 +174,5 @@ function App() {
   );
 }
 
-export default App
+export default App;
+

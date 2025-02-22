@@ -1,9 +1,9 @@
 import CourseDetails from './pages/CourseDetails';
 import CourseExplore from './pages/CourseExplore';
 import Home from './pages/Home.jsx';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainLayout from './component/MainLayout';
-import { createBrowserRouter, Navigate, RouterProvider,useLocation } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider, useLocation } from "react-router-dom";
 import Dashboard from './pages/instructor/Dashboard';
 import Sidebar from './pages/instructor/Sidebar';
 import CourseTable from './pages/instructor/CourseTable';
@@ -28,7 +28,7 @@ import MeetingsPage from './pages/instructor/MeetingsPage';
 import { ToastContainer } from 'react-toastify';
 import SplashScreen from './SplashScreen';
 
-
+// Admin Protected Route
 export const AdminProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem("user")) || null;
   const location = useLocation();
@@ -41,7 +41,7 @@ export const AdminProtectedRoute = ({ children }) => {
   }
 };
 
-
+// Router Configuration
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -132,7 +132,7 @@ const appRouter = createBrowserRouter([
       // Admin Routes
       {
         path: "admin",
-        element:(<AdminProtectedRoute> <Sidebar2 /> </AdminProtectedRoute>),
+        element: <AdminProtectedRoute><Sidebar2 /></AdminProtectedRoute>,
         children: [
           {
             path: "dashboard",
@@ -161,18 +161,35 @@ const appRouter = createBrowserRouter([
   },
 ]);
 
+// App Component
 function App() {
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if the app has been loaded before in this session
+    const hasAppLoadedBefore = sessionStorage.getItem('hasAppLoadedBefore');
+
+    if (hasAppLoadedBefore) {
+      // If the app has loaded before in this session, skip the splash screen
+      setLoading(false);
+    } else {
+      // If the app is loading for the first time in this session, set the flag in sessionStorage
+      sessionStorage.setItem('hasAppLoadedBefore', 'true');
+    }
+  }, []);
+
   return (
     <main>
       {loading ? (
         <SplashScreen onComplete={() => setLoading(false)} />
       ) : (
-        <RouterProvider router={appRouter} />
+        <>
+          <RouterProvider router={appRouter} />
+          <ToastContainer />
+        </>
       )}
     </main>
   );
 }
 
 export default App;
-

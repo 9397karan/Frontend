@@ -16,7 +16,7 @@ export const AdminDashboard = () => {
     }, []);
 
     return (
-        <section className="dark:bg-gray-900 w-full">
+        <section className="dark:bg-gray-900 w-full mt-5">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center">Admin Dashboard</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-6 mb-6">

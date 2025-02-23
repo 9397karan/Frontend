@@ -6,7 +6,7 @@ import { PlayCircle } from "lucide-react";
 import { MdAssignment } from "react-icons/md";
 import { PiCertificateFill } from "react-icons/pi";
 import { IoCall } from "react-icons/io5";
-import io from "socket.io-client";
+
 import {
   Card,
   CardContent,
@@ -118,7 +118,7 @@ const LecturePage = () => {
       const res = await axios.post("https://backend-dup.onrender.com/api/notifications/add", notificationData);
       
       // Emit socket event
-      socket.emit("send_notification", res.data);
+   
 
       alert("Call request sent to the instructor!");
     } catch (error) {
@@ -146,16 +146,7 @@ const LecturePage = () => {
     }
   };
 
-  useEffect(() => {
-    // Listen for instructor replies
-    socket.on("receive_reply", (newReply) => {
-      setReplies((prevReplies) => [...prevReplies, newReply]);
-    });
 
-    return () => {
-      socket.off("receive_reply");
-    };
-  }, []);
 
   if (loading) {
     return <Spinner />;

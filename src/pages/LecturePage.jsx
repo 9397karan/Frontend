@@ -15,7 +15,6 @@ import {
 } from "../components/ui/card";
 import Spinner from "../component/Spinner";
 
-const socket = io("http://localhost:5000");
 
 const LecturePage = () => {
   const { courseId } = useParams();

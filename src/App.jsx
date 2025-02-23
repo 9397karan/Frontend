@@ -164,6 +164,8 @@ const appRouter = createBrowserRouter([
 // App Component
 function App() {
   const [loading, setLoading] = useState(true);
+   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
 
   useEffect(() => {
     // Check if the app has been loaded before in this session
@@ -176,7 +178,33 @@ function App() {
       // If the app is loading for the first time in this session, set the flag in sessionStorage
       sessionStorage.setItem('hasAppLoadedBefore', 'true');
     }
+
+     const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    };
   }, []);
+    const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted PWA installation");
+        } else {
+          console.log("User dismissed PWA installation");
+        }
+        setDeferredPrompt(null);
+        setShowInstallButton(false);
+      });
+    }
+  };
 
   return (
     <main>
@@ -186,6 +214,18 @@ function App() {
         <>
           <RouterProvider router={appRouter} />
           <ToastContainer />
+          {showInstallButton && (
+            <button 
+              onClick={handleInstallClick} 
+              style={{
+                position: "fixed", bottom: "20px", right: "20px",
+                padding: "10px 20px", backgroundColor: "#007bff", color: "#fff",
+                border: "none", borderRadius: "5px", cursor: "pointer",
+                fontSize: "16px"
+              }}>
+              Install App
+            </button>
+          )}
         </>
       )}
     </main>

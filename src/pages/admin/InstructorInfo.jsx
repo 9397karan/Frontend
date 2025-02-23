@@ -25,7 +25,7 @@ export const InstructorInfo = () => {
   }, [id]);  // Add `id` as a dependency to refetch when `id` changes
 
   return (
-    <Table className="mt-[40px]">
+    <Table className="mt-[50px]">
       <TableCaption>List of courses</TableCaption>
       <TableHeader>
         <TableRow>

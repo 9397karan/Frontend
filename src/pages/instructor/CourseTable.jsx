@@ -54,7 +54,7 @@ const CourseTable = () => {
 
   }
   return (
-    <div className="p-1 mt-10 sm:p-6  bg-gray-100 min-h-screen dark:bg-gray-800">
+    <div className="p-1 mt-10 sm:p-6  bg-gray-100 w-full h-screen dark:bg-gray-800">
       <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Dashboard</h1>
 
       <Card className="bg-white dark:bg-gray-700">

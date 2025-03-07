@@ -37,7 +37,7 @@ const InstructorTable = () => {
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Enrolled Students</TableHead>
-            <TableHead>Total Revenue</TableHead>
+            <TableHead>Total Revenue(₹)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

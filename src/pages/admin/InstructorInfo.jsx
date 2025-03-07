@@ -43,7 +43,7 @@ export const InstructorInfo = () => {
             <TableCell>{course.courseName}</TableCell>
             <TableCell>{course.totalStudents}</TableCell>
             <TableCell>{course.coursePrice}</TableCell>
-            <TableCell className="text-right">{course.totalRevenue}</TableCell>
+            <TableCell className="text-right">₹ {course.totalRevenue}</TableCell>
           </TableRow>
         ))}
       </TableBody>

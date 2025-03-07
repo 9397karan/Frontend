@@ -115,12 +115,12 @@ const Navbar = () => {
                       >
                         Dashboard
                       </button>
-                      <button
+{/*                       <button
                         onClick={() => navigate("/profile")}
                         className="block w-full text-left px-4 py-2 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Edit Profile
-                      </button>
+                      </button> */}
                       <button
                         onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -193,12 +193,12 @@ const Navbar = () => {
                 >
                   Dashboard
                 </button>
-                <button
+{/*                 <button
                   onClick={() => navigate("/profile")}
                   className="block w-full dark:text-white text-left px-4 py-2"
                 >
                   Edit Profile
-                </button>
+                </button> */}
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-red-500"

@@ -7,8 +7,8 @@ export const Room = () => {
   const roomID = searchParams.get("roomID") || "default-room"; // Use roomID from URL or fallback to a default one
 
   const myMeeting = (element) => {
-    const appID = 537245570;
-    const serverSecret = "27c1d0a98753b66778f333ea7a4640fb";
+    const appID = 748818450;
+    const serverSecret = "c201ea82acf2af6340e4d1abb9463714";
     
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
